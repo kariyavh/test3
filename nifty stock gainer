@@ -1,0 +1,45 @@
+import yfinance as yf 
+import pandas as pd
+
+def get_nifty50_stocks():
+    # Nifty 50 stock symbols
+    nifty50_stocks = [
+        'ADANIPORTS.NS', 'ASIANPAINT.NS', 'AXISBANK.NS', 'BAJFINANCE.NS',
+        'BHARTIARTL.NS', 'BPCL.NS', 'BRITANNIA.NS', 'CIPLA.NS', 'COALINDIA.NS',
+        'DRREDDY.NS', 'EICHERMOT.NS', 'GAIL.NS', 'GRASIM.NS', 'HCLTECH.NS',
+        'HDFCBANK.NS', 'HDFCLIFE.NS', 
+    ]
+    return nifty50_stocks
+def get_top_gainers(stocks):
+    top_gainers = []
+    for stock in stocks:
+        ticker = yf.Ticker(stock)
+        info = ticker.info
+        change = (info['currentPrice'] - info['previousClose']) / info['previousClose'] * 100
+        top_gainers.append((stock, change))
+    top_gainers.sort(key=lambda x: x[1], reverse=True)
+    return top_gainers[:5]
+def get_top_losers(stocks):
+    top_losers = []
+    for stock in stocks:
+        ticker = yf.Ticker(stock)
+        info = ticker.info
+        change = (info['currentPrice'] - info['previousClose']) / info['previousClose'] * 100
+        top_losers.append((stock, change))
+    top_losers.sort(key=lambda x: x[1])
+    return top_losers[:5]
+def main():
+    nifty50_stocks = get_nifty50_stocks()
+    top_gainers = get_top_gainers(nifty50_stocks)
+    top_losers = get_top_losers(nifty50_stocks)
+
+    print("Top 5 Gainers:")
+    for stock, change in top_gainers:
+        print(f"{stock}: {change:.2f}%")
+
+    print("\nTop 5 Losers:")
+    for stock, change in top_losers:
+        print(f"{stock}: {change:.2f}%")
+
+if __name__ == "__main__":
+    main()
